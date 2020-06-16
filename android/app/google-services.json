@@ -1,0 +1,48 @@
+{
+  "project_info": {
+    "project_number": "487250231162",
+    "firebase_url": "https://automotive-marketplace-certo.firebaseio.com",
+    "project_id": "automotive-marketplace-certo",
+    "storage_bucket": "automotive-marketplace-certo.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:487250231162:android:895f26aedf84c2a2d160c3",
+        "android_client_info": {
+          "package_name": "enzo.automotive.market"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "487250231162-bh3j50dap9qlap35bkfhvbtenvnu30eh.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "enzo.automotive.market",
+            "certificate_hash": "8147702aa8aac617520f4b22860a154a8e8b30a2"
+          }
+        },
+        {
+          "client_id": "487250231162-jseth3slvmo35ro0m9jav7q6798vb8d1.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCSGNgSpBpllGrHJGSKm0lnIXC-yn0loko"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "487250231162-jseth3slvmo35ro0m9jav7q6798vb8d1.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
