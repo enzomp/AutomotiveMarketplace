@@ -2,6 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:com/pages/home.dart';
 
 class Cadastro extends StatelessWidget {
+
+  TextEditingController _nomeController = TextEditingController();
+  TextEditingController _emailController = TextEditingController();
+  TextEditingController _senhaController = TextEditingController();
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -39,6 +44,7 @@ class Cadastro extends StatelessWidget {
                   alignLabelWithHint: true,
                   hintText: 'Nome Completo',
                 ),
+                controller: _nomeController,
                 keyboardType: TextInputType.text,
               ),
             ),
@@ -58,6 +64,7 @@ class Cadastro extends StatelessWidget {
                   alignLabelWithHint: true,
                   hintText: 'E-mail',
                 ),
+                controller: _emailController,
                 keyboardType: TextInputType.emailAddress,
               ),
             ),
@@ -78,6 +85,7 @@ class Cadastro extends StatelessWidget {
                   alignLabelWithHint: true,
                   hintText: 'Senha',
                 ),
+                controller: _senhaController,
                 keyboardType: TextInputType.text,
               ),
             ),
@@ -95,15 +103,16 @@ class Cadastro extends StatelessWidget {
                         side: BorderSide(color: Colors.white),
                       ),
                       child: Text(
-                        'ENTRAR',
+                        'CADASTRAR',
                         style: TextStyle(fontFamily: 'Oswald', color: Colors.white),
                       ),
                       color: Colors.amber,
                       onPressed: () {
-                        Navigator.pushAndRemoveUntil(
-                            context,
-                            MaterialPageRoute(builder: (context) => Home()),
-                            (Route<dynamic> route) => false);
+                        print(
+                          _nomeController.text + " - " +
+                          _emailController.text + " - " +
+                          _senhaController.text
+                        );
                       },
                     ),
                   ),
