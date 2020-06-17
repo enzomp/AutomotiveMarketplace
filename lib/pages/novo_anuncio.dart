@@ -51,6 +51,8 @@ class _NovoAnuncioState extends State<NovoAnuncio> {
     String new_anuncio;
     FirebaseUser user;
 
+    String link_foto = "";
+
     await FirebaseAuth.instance.currentUser().then((currentUser) => {
       if (currentUser != null) {
         user = currentUser,
@@ -65,16 +67,33 @@ class _NovoAnuncioState extends State<NovoAnuncio> {
         "nome" : nome,
         "preco" : preco,
         "telefone" : telefone,
+        "foto"  : "",
     }).then((value){
       new_anuncio = value.documentID;
     });
 
-    print("ID DOC: "+ new_anuncio);
+    if(_foto != "") {
+      FirebaseStorage storage = FirebaseStorage.instance;
+      StorageReference rootFolder = storage.ref();
+      StorageReference arquivo = rootFolder.child("anuncios_img").child(user.uid).child(new_anuncio);
+      arquivo.putFile(_foto);
 
-    FirebaseStorage storage = FirebaseStorage.instance;
-    StorageReference rootFolder = storage.ref();
-    StorageReference arquivo = rootFolder.child("anuncios_img").child(user.uid).child(new_anuncio);
-    arquivo.putFile(_foto);
+      StorageUploadTask task = arquivo.putFile(_foto);
+      await task.onComplete.then((StorageTaskSnapshot snapshot) async {
+        link_foto = await snapshot.ref.getDownloadURL();
+      });
+
+      await Firestore.instance
+        .collection(user.uid)
+        .document("anuncios")
+        .collection("anuncios")
+        .document(new_anuncio)
+        .updateData({
+          'foto' : link_foto
+        });
+    }
+
+    print("ID DOC: "+ new_anuncio);
   }
 
   @override

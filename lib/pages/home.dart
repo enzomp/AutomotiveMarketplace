@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:com/components/menu_inferior.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:com/model/Anuncios.dart';
 import 'package:com/pages/novo_anuncio.dart';
@@ -12,11 +13,22 @@ class Home extends StatefulWidget{
 
 class _HomeState extends State<Home> {
   Firestore db = Firestore.instance;
+  String user;
+
+  String _getUser() {
+    FirebaseAuth.instance.currentUser().then((currentUser) => {
+      if (currentUser != "") {
+        user = currentUser.uid,
+      }
+    });
+    print("USER:: "+user);
+    return user;
+  }
 
 
   _body() {
     return StreamBuilder(
-      stream: db.collection("anuncios").snapshots(),
+      stream: db.collection( _getUser() ).document("anuncios").collection("anuncios").snapshots(),
       //ignore: missing return
       builder: (context, snapshot) {
         switch (snapshot.connectionState) {
