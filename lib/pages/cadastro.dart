@@ -28,6 +28,11 @@ class _CadastroState extends State<Cadastro> {
           _erroMsg = "Informe um email válido!";
         });
       }
+      else if (!(senha.length > 6)) {
+        setState(() {
+          _erroMsg = "Senha deve ter mais de 6 caracteres!";
+        });
+      }
       else {
         setState(() {
           _erroMsg = "";
@@ -54,9 +59,11 @@ class _CadastroState extends State<Cadastro> {
       email: usuario.email,
       password: usuario.senha
     ).then((firebaseUser){
-      setState(() {
-        _erroMsg = "CADASTRO REALIZADO COM SUCESSO!";
-      });
+      Navigator.pushAndRemoveUntil(
+          context,
+          MaterialPageRoute(builder: (context) => Home()),
+          (Route<dynamic> route) => false,
+      );
     }).catchError((error) {
       print("Erro retornado do Firebase: " +error.toString());
       setState(() {
