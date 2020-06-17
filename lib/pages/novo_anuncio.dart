@@ -91,12 +91,8 @@ class _NovoAnuncioState extends State<NovoAnuncio> {
             child: _avatar(),
           ),
           Align(
-            alignment: Alignment.bottomCenter,
-            child: _title(),
-          ),
-          Align(
-            alignment: Alignment.bottomCenter,
-            child: _content(),
+            alignment: Alignment.topLeft,
+            child: _addPhoto(context),
           ),
           Align(
             alignment: Alignment.bottomCenter,
@@ -104,11 +100,15 @@ class _NovoAnuncioState extends State<NovoAnuncio> {
           ),
           Align(
             alignment: Alignment.topLeft,
-            child: _addPhoto(context),
+            child: _backBtn(context),
           ),
           Align(
-            alignment: Alignment.topLeft,
-            child: _backBtn(context),
+            alignment: Alignment.bottomCenter,
+            child: _title(),
+          ),
+          Align(
+            alignment: Alignment.bottomCenter,
+            child: _content(),
           ),
         ],
       ),
