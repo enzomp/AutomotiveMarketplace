@@ -2,6 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:com/components/menu_inferior.dart';
 import 'package:flutter/material.dart';
 import 'package:com/model/Anuncios.dart';
+import 'package:com/pages/novo_anuncio.dart'
 
 
 class Home extends StatefulWidget{
@@ -100,7 +101,14 @@ class _HomeState extends State<Home> {
           Icons.add,
           color: Colors.white,
         ),
-        onPressed: () {},
+        onPressed: () {
+          Navigator.push(context,
+              MaterialPageRoute(
+                  builder: (context) => NovoAnuncio()
+              )
+          );
+        },
+        tooltip: 'Novo Anúncio',
         backgroundColor: Colors.amber,
       ),
 
