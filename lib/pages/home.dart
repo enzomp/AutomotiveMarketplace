@@ -2,7 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:com/components/menu_inferior.dart';
 import 'package:flutter/material.dart';
 import 'package:com/model/Anuncios.dart';
-import 'package:com/pages/novo_anuncio.dart'
+import 'package:com/pages/novo_anuncio.dart';
 
 
 class Home extends StatefulWidget{

@@ -53,7 +53,7 @@ class _NovoAnuncioState extends State<NovoAnuncio> {
 
     await FirebaseAuth.instance.currentUser().then((currentUser) => {
       if (currentUser != null) {
-        user = currentUser;
+        user = currentUser,
       }
     });
 
@@ -95,10 +95,6 @@ class _NovoAnuncioState extends State<NovoAnuncio> {
             child: _addPhoto(context),
           ),
           Align(
-            alignment: Alignment.bottomCenter,
-            child: _action(),
-          ),
-          Align(
             alignment: Alignment.topLeft,
             child: _backBtn(context),
           ),
@@ -109,6 +105,10 @@ class _NovoAnuncioState extends State<NovoAnuncio> {
           Align(
             alignment: Alignment.bottomCenter,
             child: _content(),
+          ),
+          Align(
+            alignment: Alignment.bottomCenter,
+            child: _action(),
           ),
         ],
       ),
@@ -178,7 +178,10 @@ class _NovoAnuncioState extends State<NovoAnuncio> {
           ),
         ),
         color: Colors.amber,
-        onPressed: () {},
+        onPressed: () {
+          _validacao();
+          Navigator.pop(context);
+        },
       ),
     );
   }
