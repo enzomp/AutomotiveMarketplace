@@ -174,11 +174,7 @@ class _CadastroState extends State<Cadastro> {
                           ),
                           color: Colors.amber,
                           onPressed: () {
-                            print(
-                                _nomeController.text + " - " +
-                                    _emailController.text + " - " +
-                                    _senhaController.text
-                            );
+                            _validacao();
                           },
                         ),
                       ),
