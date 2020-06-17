@@ -1,6 +1,9 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'dart:io';
+import 'package:firebase_storage/firebase_storage.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 
 class NovoAnuncio extends StatefulWidget {
   @override
@@ -9,6 +12,10 @@ class NovoAnuncio extends StatefulWidget {
 
 class _NovoAnuncioState extends State<NovoAnuncio> {
 
+  TextEditingController _nomeController = TextEditingController();
+  TextEditingController _precoController = TextEditingController();
+  TextEditingController _telefoneController = TextEditingController();
+  String _erroMsg = "";
   File _foto;
 
   Future _getImage() async {
@@ -21,6 +28,55 @@ class _NovoAnuncioState extends State<NovoAnuncio> {
     });
   }
 
+  _validacao() {
+    String nome = _nomeController.text;
+    String preco = _precoController.text;
+    String telefone = _telefoneController.text;
+
+    if (nome.isNotEmpty && preco.isNotEmpty && telefone.isNotEmpty) {
+      _cadastrar();
+    }
+    else {
+      setState(() {
+        _erroMsg = "Preencha todos os campos";
+      });
+    }
+  }
+
+  Future _cadastrar() async {
+    String nome = _nomeController.text;
+    String preco = _precoController.text;
+    String telefone = _telefoneController.text;
+
+    String new_anuncio;
+    FirebaseUser user;
+
+    await FirebaseAuth.instance.currentUser().then((currentUser) => {
+      if (currentUser != null) {
+        user = currentUser;
+      }
+    });
+
+    await Firestore.instance
+      .collection(user.uid)
+      .document("anuncios")
+      .collection("anuncios")
+      .add({
+        "nome" : nome,
+        "preco" : preco,
+        "telefone" : telefone,
+    }).then((value){
+      new_anuncio = value.documentID;
+    });
+
+    print("ID DOC: "+ new_anuncio);
+
+    FirebaseStorage storage = FirebaseStorage.instance;
+    StorageReference rootFolder = storage.ref();
+    StorageReference arquivo = rootFolder.child("anuncios_img").child(user.uid).child(new_anuncio);
+    arquivo.putFile(_foto);
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -29,6 +85,10 @@ class _NovoAnuncioState extends State<NovoAnuncio> {
           Align(
             alignment: Alignment.topCenter,
             child: _image(),
+          ),
+          Align(
+            alignment: Alignment.topLeft,
+            child: _avatar(),
           ),
           Align(
             alignment: Alignment.bottomCenter,
@@ -50,10 +110,6 @@ class _NovoAnuncioState extends State<NovoAnuncio> {
             alignment: Alignment.topLeft,
             child: _backBtn(context),
           ),
-          Align(
-            alignment: Alignment.topLeft,
-            child: _avatar,
-          ),
         ],
       ),
     );
@@ -66,7 +122,23 @@ class _NovoAnuncioState extends State<NovoAnuncio> {
     );
   }
 
-  Widget _title(){
+  Widget _avatar() {
+    return _foto == null
+        ? Container()
+        : Padding(
+      padding: EdgeInsets.only(top: 225, left: 150, right: 30),
+      child: CircleAvatar(
+        radius: 55,
+        backgroundColor: Colors.white,
+        child: CircleAvatar(
+          radius: 50,
+          backgroundImage: AssetImage(_foto.path),
+        ),
+      ),
+    );
+  }
+
+  Widget _title() {
     return Container(
       height: 450,
       width: 510,
@@ -89,7 +161,7 @@ class _NovoAnuncioState extends State<NovoAnuncio> {
     );
   }
 
-  Widget _action(){
+  Widget _action() {
     return Container(
       width: 200,
       height: 45,
@@ -107,6 +179,47 @@ class _NovoAnuncioState extends State<NovoAnuncio> {
         ),
         color: Colors.amber,
         onPressed: () {},
+      ),
+    );
+  }
+
+  Widget _addPhoto(BuildContext context) {
+    return Container(
+      height: 60,
+      width: 330,
+      margin: EdgeInsets.only(
+        left: 40,
+        top: 100,
+      ),
+      child: RaisedButton(
+        color: Colors.transparent,
+        onPressed: () {
+          _getImage();
+        },
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(50.0),
+        ),
+        child: Row(
+          children: <Widget>[
+            Padding(
+              padding: EdgeInsets.only(left: 70),
+              child: Icon(
+                Icons.camera_enhance,
+                color: Colors.amber,
+              ),
+            ),
+            Padding(
+              padding: EdgeInsets.only(left: 15),
+              child: Text(
+                "Clique para adicionar nova foto.",
+                style: TextStyle(
+                    fontFamily: 'Oswald',
+                    color: Colors.white.withOpacity(0.5)
+                ),
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }
@@ -165,6 +278,7 @@ class _NovoAnuncioState extends State<NovoAnuncio> {
                 alignLabelWithHint: true,
                 hintText: 'Nome',
               ),
+              controller: _nomeController,
               keyboardType: TextInputType.text,
             ),
           ),
@@ -185,8 +299,9 @@ class _NovoAnuncioState extends State<NovoAnuncio> {
                 fillColor: Colors.white,
 
                 alignLabelWithHint: true,
-                hintText: 'Espécie',
+                hintText: 'Preço',
               ),
+              controller: _precoController,
               keyboardType: TextInputType.text,
             ),
           ),
@@ -207,30 +322,9 @@ class _NovoAnuncioState extends State<NovoAnuncio> {
                 fillColor: Colors.white,
 
                 alignLabelWithHint: true,
-                hintText: 'Raça',
+                hintText: 'Telefone',
               ),
-              keyboardType: TextInputType.text,
-            ),
-          ),
-
-          Padding(
-            padding: EdgeInsets.only(top: 20, left: 30, right: 30),
-            child:
-            TextField(
-              decoration: InputDecoration(
-                border: new OutlineInputBorder(
-                  borderRadius: const BorderRadius.all(
-                    const Radius.circular(50.0),
-                  ),
-                ),
-                contentPadding: new EdgeInsets.symmetric(vertical: 5.0, horizontal: 20.0),
-
-                filled: true,
-                fillColor: Colors.white,
-
-                alignLabelWithHint: true,
-                hintText: 'Idade',
-              ),
+              controller: _telefoneController,
               keyboardType: TextInputType.text,
             ),
           ),
