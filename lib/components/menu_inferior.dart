@@ -1,4 +1,7 @@
+import 'package:com/pages/meu_user.dart';
+import 'package:com/pages/meus_anuncios.dart';
 import 'package:flutter/material.dart';
+import 'package:com/pages/home.dart';
 
 class MenuInferior extends StatelessWidget {
   @override
@@ -15,7 +18,11 @@ class MenuInferior extends StatelessWidget {
             IconButton(
               icon: const Icon(Icons.home, color: Colors.amber),
               tooltip: 'Home',
-              onPressed: () {/* **/},
+              onPressed: () {
+                Navigator.push(context,
+                MaterialPageRoute(builder: (context) => Home()),
+                );
+              },
             ),
 
             IconButton(
@@ -27,13 +34,21 @@ class MenuInferior extends StatelessWidget {
             IconButton(
               icon: const Icon(Icons.list, color: Colors.amber),
               tooltip: 'Meus Anúncios',
-              onPressed: () {/* **/},
+              onPressed: () {
+                Navigator.push(context,
+                MaterialPageRoute(builder: (context) => MeusAnuncios()),
+                );
+              },
             ),
 
             IconButton(
               icon: const Icon(Icons.account_circle, color: Colors.amber),
               tooltip: 'Meu Perfil',
-              onPressed: () {/* **/},
+              onPressed: () {
+                Navigator.push(context,
+                MaterialPageRoute(builder: (context) => MyUser()),
+                );
+              },
             )
           ],
         ),

@@ -3,15 +3,14 @@ import 'package:com/components/menu_inferior.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:com/model/Anuncios.dart';
-import 'package:com/pages/novo_anuncio.dart';
 
 
-class Home extends StatefulWidget{
+class MeusAnuncios extends StatefulWidget{
   @override
-  _HomeState createState() => _HomeState();
+  _MeusAnunciosState createState() => _MeusAnunciosState();
 }
 
-class _HomeState extends State<Home> {
+class _MeusAnunciosState extends State<MeusAnuncios> {
   Firestore db = Firestore.instance;
   String _userID = "";
 
@@ -31,20 +30,20 @@ class _HomeState extends State<Home> {
   _loadBody() {
     return _userID == ""
         ? Center(
-            child: Column(
-              children: <Widget>[
-                Text("Carregando anúncios..."),
-                CircularProgressIndicator()
-              ],
-            ),
-          )
+      child: Column(
+        children: <Widget>[
+          Text("Carregando anúncios..."),
+          CircularProgressIndicator()
+        ],
+      ),
+    )
         :_body();
   }
 
 
   _body() {
     return StreamBuilder(
-      stream: db.collection("anuncios").snapshots(),
+      stream: db.collection(_userID).snapshots(),
       //ignore: missing return
       builder: (context, snapshot) {
         switch (snapshot.connectionState) {
@@ -86,22 +85,22 @@ class _HomeState extends State<Home> {
 
                         return Card(
                           elevation: 3,
-                            child: Container(
-                              height: 100.0,
-                              child: Row(
+                          child: Container(
+                            height: 100.0,
+                            child: Row(
                                 children: <Widget>[
                                   Container(
                                     height: 100.0,
                                     width: 100.0,
                                     decoration: BoxDecoration(
-                                    borderRadius: BorderRadius.only(
-                                      bottomLeft: Radius.circular(5),
-                                      topLeft: Radius.circular(5)
-                                    ),
-                                    image: DecorationImage(
-                                      fit: BoxFit.cover,
-                                      image: NetworkImage(anuncio.foto)
-                                      )
+                                        borderRadius: BorderRadius.only(
+                                            bottomLeft: Radius.circular(5),
+                                            topLeft: Radius.circular(5)
+                                        ),
+                                        image: DecorationImage(
+                                            fit: BoxFit.cover,
+                                            image: NetworkImage(anuncio.foto)
+                                        )
                                     ),
                                   ),
                                   Container(
@@ -109,37 +108,37 @@ class _HomeState extends State<Home> {
                                     width: 236,
                                     child: Padding(
                                       padding: EdgeInsets.fromLTRB(10, 2, 0, 0),
-                                         child: Column(
-                                          crossAxisAlignment: CrossAxisAlignment.start,
-                                          children: <Widget>[
-                                            Text(anuncio.nome, style: TextStyle(
-                                              fontSize: 20,
-                                            ),),
-                                            Padding(
-                                              padding: EdgeInsets.fromLTRB(0, 3, 0, 3),
-                                              child: Container(
-                                                width: 80,
-                                                decoration: BoxDecoration(
+                                      child: Column(
+                                        crossAxisAlignment: CrossAxisAlignment.start,
+                                        children: <Widget>[
+                                          Text(anuncio.nome, style: TextStyle(
+                                            fontSize: 20,
+                                          ),),
+                                          Padding(
+                                            padding: EdgeInsets.fromLTRB(0, 3, 0, 3),
+                                            child: Container(
+                                              width: 80,
+                                              decoration: BoxDecoration(
                                                   border: Border.all(color: Colors.amber),
                                                   borderRadius: BorderRadius.all(Radius.circular(10))
-                                                ),
-                                                child: Text(anuncio.preco, textAlign: TextAlign.center,),
                                               ),
+                                              child: Text(anuncio.preco, textAlign: TextAlign.center,),
                                             ),
-                                            Padding(
-                                              padding: EdgeInsets.fromLTRB(0, 5, 0, 2),
-                                              child: Container(
-                                                width: 260,
-                                                child: Text("Telefone: " + anuncio.telefone, style: TextStyle(
+                                          ),
+                                          Padding(
+                                            padding: EdgeInsets.fromLTRB(0, 5, 0, 2),
+                                            child: Container(
+                                              width: 260,
+                                              child: Text("Telefone: " + anuncio.telefone, style: TextStyle(
                                                   fontSize: 15,
                                                   color: Color.fromARGB(255, 48, 48, 54)
-                                                  ),),
-                                              ),
+                                              ),),
                                             ),
-                                          ],
-                                        ),
+                                          ),
+                                        ],
                                       ),
                                     ),
+                                  ),
                                   Container(
                                       child: Padding(
                                         padding: EdgeInsets.all(0),
@@ -147,13 +146,13 @@ class _HomeState extends State<Home> {
                                           icon: Icon(Icons.star_border),
                                           color: Colors.amber,
                                         ),
+                                      )
                                   )
-                                  )
-                                  ]
-                                ),
-                              ),
-                            );
-                          }
+                                ]
+                            ),
+                          ),
+                        );
+                      }
                   )
               );
             }
@@ -176,28 +175,11 @@ class _HomeState extends State<Home> {
       body: Container(
         decoration: BoxDecoration(
             image: DecorationImage(
-                image: AssetImage("assets/images/homeBackground.png"),
-                fit: BoxFit.cover,
+              image: AssetImage("assets/images/homeBackground.png"),
+              fit: BoxFit.cover,
             )
         ),
         child: _loadBody(),
-      ),
-
-
-      floatingActionButton: FloatingActionButton(
-        child: Icon(
-          Icons.add,
-          color: Colors.white,
-        ),
-        onPressed: () {
-          Navigator.push(context,
-              MaterialPageRoute(
-                  builder: (context) => NovoAnuncio()
-              )
-          );
-        },
-        tooltip: 'Novo Anúncio',
-        backgroundColor: Colors.amber,
       ),
 
       bottomNavigationBar: MenuInferior(),

@@ -1,6 +1,7 @@
 class Usuario {
   String _nome;
   String _email;
+  String _telefone;
   String _senha;
 
   Usuario();
@@ -21,6 +22,12 @@ class Usuario {
 
   set nome(String value) {
     _nome = value;
+  }
+
+  String get telefone => _telefone;
+
+  set telefone(String value) {
+    _telefone = value;
   }
 
 

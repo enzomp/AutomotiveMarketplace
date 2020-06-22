@@ -60,14 +60,23 @@ class _NovoAnuncioState extends State<NovoAnuncio> {
     });
 
     await Firestore.instance
-      .collection(user.uid)
-      .document("anuncios")
       .collection("anuncios")
       .add({
         "nome" : nome,
         "preco" : preco,
         "telefone" : telefone,
         "foto"  : "",
+    }).then((value){
+      new_anuncio = value.documentID;
+    });
+
+    await Firestore.instance
+        .collection(user.uid)
+        .add({
+      "nome" : nome,
+      "preco" : preco,
+      "telefone" : telefone,
+      "foto"  : "",
     }).then((value){
       new_anuncio = value.documentID;
     });
@@ -84,13 +93,18 @@ class _NovoAnuncioState extends State<NovoAnuncio> {
       });
 
       await Firestore.instance
-        .collection(user.uid)
-        .document("anuncios")
         .collection("anuncios")
         .document(new_anuncio)
         .updateData({
           'foto' : link_foto
         });
+
+      await Firestore.instance
+          .collection(user.uid)
+          .document(new_anuncio)
+          .updateData({
+        'foto' : link_foto
+      });
     }
 
     print("ID DOC: "+ new_anuncio);
