@@ -167,7 +167,7 @@ class _MeusAnunciosState extends State<MeusAnuncios> {
     return Scaffold(
       backgroundColor: Colors.black,
       appBar: AppBar(
-        title: const Text('Anúncios'),
+        title: const Text('Meus Anúncios'),
         centerTitle: true,
         backgroundColor: Colors.amber,
       ),

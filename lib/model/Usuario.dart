@@ -1,16 +1,9 @@
 class Usuario {
   String _nome;
   String _email;
-  String _telefone;
   String _senha;
 
   Usuario();
-
-  String get senha => _senha;
-
-  set senha(String value) {
-    _senha = value;
-  }
 
   String get email => _email;
 
@@ -24,10 +17,10 @@ class Usuario {
     _nome = value;
   }
 
-  String get telefone => _telefone;
+  String get senha => _senha;
 
-  set telefone(String value) {
-    _telefone = value;
+  set senha(String value) {
+    _senha = value;
   }
 
 

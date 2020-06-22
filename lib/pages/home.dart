@@ -76,13 +76,13 @@ class _HomeState extends State<Home> {
                   child: ListView.builder(
                       itemCount: querySnapshot.documents.length,
                       itemBuilder: (context, index) {
-                        List<DocumentSnapshot> anuncios = querySnapshot
-                            .documents.toList();
+                        List<DocumentSnapshot> anuncios = querySnapshot.documents.toList();
                         DocumentSnapshot dados = anuncios[index];
 
                         Anuncios anuncio = Anuncios(
                             dados["nome"], dados["preco"], dados["telefone"],
                             dados["foto"]);
+
 
                         return Card(
                           elevation: 3,
@@ -143,12 +143,9 @@ class _HomeState extends State<Home> {
                                   Container(
                                       child: Padding(
                                         padding: EdgeInsets.all(0),
-                                        child: IconButton(
-                                          icon: Icon(Icons.star_border),
-                                          color: Colors.amber,
-                                        ),
-                                  )
-                                  )
+                                        child: FavoriteWidget()
+                                      )
+                                    )
                                   ]
                                 ),
                               ),
@@ -204,3 +201,42 @@ class _HomeState extends State<Home> {
     );
   }
 }
+
+class FavoriteWidget extends StatefulWidget {
+  @override
+  _FavoriteWidgetState createState() => _FavoriteWidgetState();
+}
+
+class _FavoriteWidgetState extends State<FavoriteWidget> {
+  bool _isFavorited = false;
+
+  @override
+  Widget build(BuildContext context) {
+    return Row(
+      mainAxisSize: MainAxisSize.min,
+      children: [
+        Container(
+          padding: EdgeInsets.all(0),
+          child: IconButton(
+            icon: (_isFavorited ? Icon(Icons.star) : Icon(Icons.star_border)),
+            color: Colors.amber,
+            onPressed: _toggleFavorite,
+          ),
+        ),
+      ],
+    );
+  }
+
+  void _toggleFavorite() {
+    List<DocumentSnapshot> favoritos = [];
+    setState(() {
+      if (_isFavorited) {
+        _isFavorited = false;
+      } else {
+        _isFavorited = true;
+      }
+    });
+  }
+}
+
+

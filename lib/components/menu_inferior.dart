@@ -1,3 +1,4 @@
+import 'package:com/pages/favoritos.dart';
 import 'package:com/pages/meu_user.dart';
 import 'package:com/pages/meus_anuncios.dart';
 import 'package:flutter/material.dart';
@@ -28,7 +29,11 @@ class MenuInferior extends StatelessWidget {
             IconButton(
               icon: const Icon(Icons.star, color: Colors.amber),
               tooltip: 'Favoritos',
-              onPressed: () {/* **/},
+              onPressed: () {
+                Navigator.push(context,
+                    MaterialPageRoute(builder: (context) => MeusFavoritos()),
+                );
+              },
             ),
 
             IconButton(
