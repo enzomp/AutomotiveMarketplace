@@ -4,7 +4,8 @@ import 'package:com/components/menu_inferior.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:com/model/Perfil.dart';
+import 'package:image_picker/image_picker.dart';
+import 'dart:io';
 
 class MyUser extends StatefulWidget {
   @override
@@ -14,8 +15,24 @@ class MyUser extends StatefulWidget {
 class _MyUserState extends State<MyUser>
   with SingleTickerProviderStateMixin {
 
+  TextEditingController _nomeController = TextEditingController();
+  TextEditingController _cidadeController = TextEditingController();
+  TextEditingController _telefoneController = TextEditingController();
+
   Firestore db = Firestore.instance;
   String _userID = "";
+  String _erroMsg = "";
+  File _foto;
+
+  Future _getImage() async {
+    PickedFile img;
+    ImagePicker cam = ImagePicker();
+    img = await cam.getImage(source: ImageSource.camera);
+
+    setState(() {
+      _foto = File(img.path);
+    });
+  }
 
   Future _getUser() async{
     FirebaseUser currentUser = await FirebaseAuth.instance.currentUser();
@@ -24,6 +41,61 @@ class _MyUserState extends State<MyUser>
     });
   }
 
+  _validacao() {
+    String nome = _nomeController.text;
+    String cidade = _cidadeController.text;
+    String telefone = _telefoneController.text;
+
+    if (nome.isNotEmpty && cidade.isNotEmpty && telefone.isNotEmpty) {
+      _cadastrar();
+    }
+    else {
+      setState(() {
+        _erroMsg = "Preencha todos os campos";
+      });
+    }
+  }
+
+  Future _cadastrar() async {
+    String nome = _nomeController.text;
+    String cidade = _cidadeController.text;
+    String telefone = _telefoneController.text;
+
+    FirebaseUser user;
+
+    String link_foto = "";
+
+    await FirebaseAuth.instance.currentUser().then((currentUser) => {
+      if (currentUser != null) {
+        user = currentUser,
+      }
+    });
+
+    await Firestore.instance.collection("perfil").document(_userID).updateData({
+        "nome" : nome,
+        "cidade" : cidade,
+        "telefone" : telefone,
+        "foto"  : "",
+        });
+
+
+    if(_foto != "") {
+      FirebaseStorage storage = FirebaseStorage.instance;
+      StorageReference rootFolder = storage.ref();
+      StorageReference arquivo = rootFolder.child("perfil_img").child(user.uid);
+      arquivo.putFile(_foto);
+
+      StorageUploadTask task = arquivo.putFile(_foto);
+      await task.onComplete.then((StorageTaskSnapshot snapshot) async {
+        link_foto = await snapshot.ref.getDownloadURL();
+      });
+
+      await Firestore.instance.collection("perfil").document(_userID).updateData({
+        'foto' : link_foto
+      });
+
+    }
+  }
 
   bool _status = true;
   final FocusNode myFocusNode = FocusNode();
@@ -116,8 +188,7 @@ class _MyUserState extends State<MyUser>
                                           decoration: new BoxDecoration(
                                             shape: BoxShape.circle,
                                             image: new DecorationImage(
-                                              image: new ExactAssetImage(
-                                                  'assets/images/logo.png'),
+                                              image: NetworkImage(perfil["foto"]),
                                               fit: BoxFit.cover,
                                             ),
                                           )),
@@ -131,9 +202,10 @@ class _MyUserState extends State<MyUser>
                                           new CircleAvatar(
                                             backgroundColor: Colors.amber,
                                             radius: 25.0,
-                                            child: new Icon(
-                                              Icons.camera_alt,
+                                            child: new IconButton(
+                                              icon: Icon(Icons.camera_alt),
                                               color: Colors.black,
+                                              onPressed: _getImage,
                                             ),
                                           )
                                         ],
@@ -214,7 +286,7 @@ class _MyUserState extends State<MyUser>
                                             ),
                                             enabled: !_status,
                                             autofocus: !_status,
-
+                                            controller: _nomeController,
                                           ),
                                         ),
                                       ],
@@ -230,7 +302,7 @@ class _MyUserState extends State<MyUser>
                                           mainAxisSize: MainAxisSize.min,
                                           children: <Widget>[
                                             new Text(
-                                              'Email',
+                                              'Cidade',
                                               style: TextStyle(
                                                   fontSize: 16.0,
                                                   fontWeight: FontWeight.bold,
@@ -249,8 +321,9 @@ class _MyUserState extends State<MyUser>
                                         new Flexible(
                                           child: new TextField(
                                             decoration: InputDecoration(
-                                                hintText: perfil["email"]),
+                                                hintText: perfil["cidade"]),
                                             enabled: !_status,
+                                            controller: _cidadeController,
                                           ),
                                         ),
                                       ],
@@ -287,6 +360,8 @@ class _MyUserState extends State<MyUser>
                                             decoration: InputDecoration(
                                                 hintText: perfil["telefone"]),
                                             enabled: !_status,
+                                            controller: _telefoneController,
+                                            keyboardType: TextInputType.text,
                                           ),
                                         ),
                                       ],
@@ -309,6 +384,8 @@ class _MyUserState extends State<MyUser>
   @override
   Widget build(BuildContext context) {
     return new Scaffold(
+        resizeToAvoidBottomPadding: false,
+        resizeToAvoidBottomInset: false,
         bottomNavigationBar: MenuInferior(),
         body: new Container(
           decoration: BoxDecoration(
@@ -324,7 +401,6 @@ class _MyUserState extends State<MyUser>
 
     @override
     void dispose() {
-      // Clean up the controller when the Widget is disposed
       myFocusNode.dispose();
       super.dispose();
     }
@@ -357,6 +433,7 @@ class _MyUserState extends State<MyUser>
                         _status = true;
                         FocusScope.of(context).requestFocus(new FocusNode());
                       });
+                      _validacao();
                     },
                   ),
                 ),

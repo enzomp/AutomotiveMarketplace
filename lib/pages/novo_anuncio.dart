@@ -159,13 +159,13 @@ class _NovoAnuncioState extends State<NovoAnuncio> {
     return _foto == null
         ? Container()
         : Padding(
-      padding: EdgeInsets.only(top: 225, left: 150, right: 30),
-      child: CircleAvatar(
-        radius: 55,
-        backgroundColor: Colors.white,
-        child: CircleAvatar(
-          radius: 50,
-          backgroundImage: AssetImage(_foto.path),
+            padding: EdgeInsets.only(top: 225, left: 150, right: 30),
+            child: CircleAvatar(
+              radius: 55,
+              backgroundColor: Colors.white,
+              child: CircleAvatar(
+              radius: 50,
+              backgroundImage: AssetImage(_foto.path),
         ),
       ),
     );

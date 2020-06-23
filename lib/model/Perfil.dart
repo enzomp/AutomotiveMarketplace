@@ -1,15 +1,15 @@
 class Perfil {
   String _nome;
-  String _email;
+  String _cidade;
   String _telefone;
   String _foto;
 
-  Perfil(this._nome, this._email, this._telefone, this._foto);
+  Perfil(this._nome, this._cidade, this._telefone, this._foto);
 
-  String get email => _email;
+  String get email => _cidade;
 
-  set email(String value) {
-    _email = value;
+  set cidade(String value) {
+    _cidade = value;
   }
 
   String get nome => _nome;
