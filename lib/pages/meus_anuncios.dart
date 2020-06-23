@@ -139,15 +139,6 @@ class _MeusAnunciosState extends State<MeusAnuncios> {
                                       ),
                                     ),
                                   ),
-                                  Container(
-                                      child: Padding(
-                                        padding: EdgeInsets.all(0),
-                                        child: IconButton(
-                                          icon: Icon(Icons.star_border),
-                                          color: Colors.amber,
-                                        ),
-                                      )
-                                  )
                                 ]
                             ),
                           ),
